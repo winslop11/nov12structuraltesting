@@ -45,7 +45,7 @@ describe("Reveal Answer", () => {
     });
 
     // /*
-    // Click Toggle Answer Visibility button, system shows answer
+    //Click Toggle Answer Visibility button, system shows answer
     test("Click Toggle Answer Visibility button, click answer button again, system hides answer", async () => {
         const toggleAnswerButton = screen.getByRole("button", {
             name: /Toggle Answer Visibility/i,
@@ -64,6 +64,26 @@ describe("Reveal Answer", () => {
         // only testing this because this component changes visibility
         // so an easy bug would be hiding too much on the page
         expect(toggleAnswerButton).toBeVisible();
+    });
+    //Click Toggle Answer Hint Visibility button, system shows answer
+    test("Click Toggle Answer Visibility button, click answer button again, system hides answer", async () => {
+        const toggleAnswerHintButton = screen.getByRole("button", {
+            name: /Toggle Hint Visibility/i,
+        });
+        await act(async () => {
+            toggleAnswerHintButton.click();
+        });
+        await act(async () => {
+            toggleAnswerHintButton.click();
+        });
+
+        //system hides answer
+        expectAnswerIsPresent(false);
+
+        // answer button still there
+        // only testing this because this component changes visibility
+        // so an easy bug would be hiding too much on the page
+        expect(toggleAnswerHintButton).toBeVisible();
     });
     //*/
 });
