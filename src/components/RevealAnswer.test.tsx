@@ -3,14 +3,20 @@ import { render, screen } from "@testing-library/react";
 import { RevealAnswer } from "./RevealAnswer";
 
 export function expectAnswerIsPresent(shouldBeThere: boolean): void {
-    let answerText = screen.queryByText(/42/);
+    let answerText = screen.queryByText(/42/i);
     if (shouldBeThere) expect(answerText).toBeInTheDocument();
     else expect(answerText).toBeNull();
 }
 
+export function expectHintIsPresent(shouldBeThere: boolean): void {
+    let hintText = screen.queryByText(/the hint/i);
+    if (shouldBeThere) expect(hintText).toBeInTheDocument();
+    else expect(hintText).toBeNull();
+}
+
 describe("Reveal Answer", () => {
     beforeEach(() => {
-        render(<RevealAnswer />);
+        render(<RevealAnswer answer={42} />);
     });
 
     test("Answer field is shown", () => {
@@ -66,19 +72,22 @@ describe("Reveal Answer", () => {
         expect(toggleAnswerButton).toBeVisible();
     });
     //Click Toggle Answer Hint Visibility button, system shows answer
-    test("Click Toggle Answer Visibility button, click answer button again, system hides answer", async () => {
+    test("Click Toggle Answer Hint Visibility button, click answer button again, system hides answer", async () => {
         const toggleAnswerHintButton = screen.getByRole("button", {
             name: /Toggle Hint Visibility/i,
         });
         await act(async () => {
             toggleAnswerHintButton.click();
         });
+        //2. system shows hint
+        expectHintIsPresent(true);
+
         await act(async () => {
             toggleAnswerHintButton.click();
         });
 
-        //system hides answer
-        expectAnswerIsPresent(false);
+        //3. system hides hint
+        expectHintIsPresent(false);
 
         // answer button still there
         // only testing this because this component changes visibility
